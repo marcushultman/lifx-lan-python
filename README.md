@@ -11,6 +11,7 @@ Consists of a network interface using a bound UDP socket, two data classes for d
 Function that posts a message but does not wait for results.
 
 `lifx.post(Message, v1, v2, ..., device=0, port=56700)`
+
 Argument      | Comment
 ------------- | -------------
 `Message`     | The message to post such as `lifx.GetService`.
@@ -22,6 +23,7 @@ Argument      | Comment
 Function that posts a message and yields the result (as a generator). The iteration stops after a certain amount of time or when the specified amount of results has been collected.
 
 `lifx.get(Message, Response, v1, v2, ..., device=0, ack=0, res=0, timeout=0.5, limit=None, port=56700)`
+
 Argument      | Comment
 ------------- | -------------
 `Message`     | The message to post such as `lifx.GetService`.
