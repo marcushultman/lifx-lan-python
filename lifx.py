@@ -23,12 +23,14 @@ def get(Message, Response, *payload,
 	device=0, ack=0, res=0,
 	timeout=0.5, limit=None, port=56700):
 	# Send packet
+	global _sequence
 	seq = _sequence = (_sequence + 1) % 256
 	data = Message.pack(_src, seq, device, ack, res, *payload)
 	_csoc.sendto(data, ('255.255.255.255', port))
 	# Receive response
+	mKey = (seq, Response.type)
 	while Response and (limit is None or limit > 0):
-		q = _messageQueue.setdefault(Response.type, [])
+		q = _messageQueue.setdefault(mKey, list())
 		try:
 			_csoc.settimeout(timeout)
 			data = q.pop(0) if len(q) else _csoc.recv(256)
@@ -36,13 +38,13 @@ def get(Message, Response, *payload,
 			break
 		else:
 			header = Header.unpack(data)
-			rSeq, rType = header[3:5]
-			if (rSeq, rType) == (Response.type, seq):
+			rKey = header[3:5]
+			if rKey == mKey:
 				yield header, Response.unpack(data[Header.size:])
 				if limit is not None:
 					limit -= 1
 			else:
-				_messageQueue.setdefault(rType, []).append(data)
+				_messageQueue.setdefault(rKey, list()).append(data)
 
 # Data structures
 class Header():
