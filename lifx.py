@@ -11,7 +11,7 @@ _csoc.bind(('', 56700))
 
 # Internal data
 _src = uuid.uuid1().node % 4294967296
-_sequenceSet = set(range(256))
+_sequence = 0
 _messageQueue = dict()
 
 # Network interface
@@ -23,7 +23,7 @@ def get(Message, Response, *payload,
 	device=0, ack=0, res=0,
 	timeout=0.5, limit=None, port=56700):
 	# Send packet
-	seq = _sequenceSet.pop()
+	seq = _sequence = (_sequence + 1) % 256
 	data = Message.pack(_src, seq, device, ack, res, *payload)
 	_csoc.sendto(data, ('255.255.255.255', port))
 	# Receive response
@@ -36,14 +36,13 @@ def get(Message, Response, *payload,
 			break
 		else:
 			header = Header.unpack(data)
-			mSeq, mType = header[3:5]
-			if (mType, mSeq) == (Response.type, seq):
+			rSeq, rType = header[3:5]
+			if (rSeq, rType) == (Response.type, seq):
 				yield header, Response.unpack(data[Header.size:])
 				if limit is not None:
 					limit -= 1
-			elif mSeq not in _sequenceSet:
-				_messageQueue.setdefault(mType, []).append(data)
-	_sequenceSet.add(seq)
+			else:
+				_messageQueue.setdefault(rType, []).append(data)
 
 # Data structures
 class Header():
