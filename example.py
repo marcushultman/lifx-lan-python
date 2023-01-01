@@ -1,4 +1,4 @@
-import lifx
+import pylifx as lifx
 
 # Helper functions
 # Human readable MAC
