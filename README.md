@@ -4,6 +4,16 @@ A low-level python wrapper around the [LIFX LAN v2 API](http://lan.developer.lif
 
 *Note: Please consult the LAN specification for any unexpected behaviour (such as receiving unknown responses etc.).*
 
+## Installation
+
+Clone this repository, then install using `pip` as follows:
+
+`pip install /path/to/lifx-lan-python`
+
+Now, you can import the `pylifx` module from anywhere.
+
+`import pylifx as lifx`
+
 ## lifx module
 The lifx module consists of a network interface using a bound UDP socket, an internal data class for device messages derived from `struct.Struct` and implementations for the currently available message types, which directly maps to the message types in the LAN specification. The module is simple, two functions for posting and receiving messages to the devices is to be used together with the preconfigured message types of the LAN protocol. 
 
