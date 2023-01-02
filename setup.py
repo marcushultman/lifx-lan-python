@@ -6,8 +6,7 @@ with open('README.md', 'r') as fh:
 setuptools.setup(
     name='pylifx',
     version='0.0.1',
-    author='Your Name',
-    author_email='your_email@here',
+    author='https://github.com/marcushultman',
     description='A low-level python wrapper around the LIFX LAN v2 API. Exposes a small synchonous interface with nothing \'going on behind the scenes\'.',
     long_description=long_description,
     long_description_content_type='text/markdown',
